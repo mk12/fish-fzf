@@ -5,10 +5,12 @@ function __fzf_insert --description "Insert a file or directory with fzf"
     set parts (string split -n / $token)
     set i -1
     while true
-        set root (string join / $parts[..$i])
+        set root (string unescape (string join / $parts[..$i]))
         if test -d "$root" -o -z "$root"
-            set -e parts[..$i]
-            set query (string join / $parts)
+            if test -n "$root"
+                set -e parts[..$i]
+            end
+            set query (string unescape (string join / $parts))
             break
         end
         set i (math $i - 1)

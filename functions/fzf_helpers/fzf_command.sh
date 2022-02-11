@@ -15,7 +15,6 @@ if [[ "$2" == finish ]]; then
     lines=()
     # Allow input to lack a trailing newline, to simplify invocation from vim.
     while read -r line || [[ -n "$line" ]]; do
-        echo "GOT LINE: $line" >> ~/log
         lines+=("$line")
     done
 fi

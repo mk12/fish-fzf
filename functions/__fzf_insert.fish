@@ -1,9 +1,11 @@
 # Copyright 2022 Mitchell Kember. Subject to the MIT License.
 
 function __fzf_insert --description "Insert a file or directory with fzf"
-    set token (commandline -t)
-    set parts (string split -n / $token)
-    set i -1
+    set -l token (commandline -t)
+    set -l parts (string split -n / $token)
+    set -l i -1
+    set -l root
+    set -l query
     while true
         set root (string unescape (string join / $parts[..$i]))
         if test -d "$root" -o -z "$root"
@@ -15,14 +17,14 @@ function __fzf_insert --description "Insert a file or directory with fzf"
         end
         set i (math $i - 1)
     end
-    set tmp (mktemp)
-    set tmp_insert (mktemp)
-    set side bottom
+    set -l tmp (mktemp)
+    set -l tmp_insert (mktemp)
+    set -l side bottom
     test $COLUMNS -ge 100; and set side right
-    set helper_dir (status dirname)/fzf_helpers
-    set preview_sh $helper_dir/fzf_preview.sh
-    set command_sh $helper_dir/fzf_command.sh
-    set files (
+    set -l helper_dir (status dirname)/fzf_helpers
+    set -l preview_sh $helper_dir/fzf_preview.sh
+    set -l command_sh $helper_dir/fzf_command.sh
+    set -l files (
         $command_sh $tmp init "$root" $argv \
         | fzf --query=$query --multi --keep-right --header-lines=1 \
         --preview="'$preview_sh' {} '$tmp'" \
@@ -45,22 +47,25 @@ function __fzf_insert --description "Insert a file or directory with fzf"
     printf "\x1b[A"
     if test (count $files) -eq 0
         commandline -i " "
-        commandline -f backward-delete-char
+        commandline -f backward-delete-char repaint
         return
     end
+    set -l escaped
     for file in $files
-        set escaped $escaped (string escape -- $file)
+        set -a escaped (string escape -- $file)
     end
     set escaped (string join ' ' $escaped)
     if test $always_insert = 1 -o (commandline) != $token -o (count $files) -gt 1
         commandline -t "$escaped "
+        commandline -f repaint
     else if test -d $files
         commandline -r "cd $escaped"
-        commandline -f execute
+        commandline -f repaint execute
     else if test -f $files
         commandline -r "$EDITOR $escaped"
-        commandline -f execute
+        commandline -f repaint execute
     else
         commandline -t "$escaped "
+        commandline -f repaint
     end
 end

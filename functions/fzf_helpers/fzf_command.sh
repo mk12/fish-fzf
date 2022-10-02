@@ -36,8 +36,8 @@ fi
 case $2 in
     init) ;;
     file|directory|z) type=$2 ;;
-    toggle-hidden) ((hidden ^= 1)) ;;
-    toggle-ignore) ((ignore ^= 1)) ;;
+    toggle-hidden) ((hidden ^= 1)) || : ;;
+    toggle-ignore) ((ignore ^= 1)) || : ;;
     home)
         root=$(python3 -c "
 import os.path

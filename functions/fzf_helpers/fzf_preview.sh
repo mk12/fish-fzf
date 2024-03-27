@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Usage: $0 FILE_OR_DIRECTORY [STATE_FILE]
 

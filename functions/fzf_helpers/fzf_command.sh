@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Usage: $0 STATE_FILE COMMAND [ARG ...] 
 

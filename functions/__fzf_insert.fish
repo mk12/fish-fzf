@@ -2,7 +2,10 @@
 
 function __fzf_insert --description "Insert a file or directory with fzf"
     set -l token (commandline -t)
-    set -l parts (string split -n / $token)
+    set token (string replace -r '^~' $HOME $token)
+    set token (string replace -r --all '/+' "/" $token)
+    set token (string replace -r '/$' "" $token)
+    set -l parts (string split / $token)
     set -l i -1
     set -l root
     set -l query
@@ -53,6 +56,10 @@ function __fzf_insert --description "Insert a file or directory with fzf"
     set -l escaped
     for file in $files
         set -a escaped (string escape -- $file)
+        if string match -q -r "$HOME/*" $escaped
+            set -l n (string length "$HOME/*")
+            set escaped "~/$(string sub -s $n $escaped)"
+        end
     end
     set escaped (string join ' ' $escaped)
     if test $always_insert = 1 -o (commandline) != $token -o (count $files) -gt 1

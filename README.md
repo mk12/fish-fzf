@@ -6,7 +6,7 @@ Unlike the [others](#alternatives), this plugin tries to pack as much as possibl
 
 ## Installation
 
-Use [Fisher]:
+Run `make install`, or use [Fisher]:
 
 ```fish
 fisher install mk12/fish-fzf

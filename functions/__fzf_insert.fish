@@ -29,7 +29,7 @@ function __fzf_insert --description "Insert a file or directory with fzf"
     set -l command_sh $helper_dir/fzf_command.sh
     set -l files (
         $command_sh $tmp init "$root" $argv \
-        | fzf --query=$query --multi --keep-right --header-lines=1 \
+        | fzf --query=$query --multi --keep-right --header-lines=1 --ansi \
         --preview="'$preview_sh' {} '$tmp'" \
         --preview-window=$side \
         --bind="ctrl-o:reload('$command_sh' '$tmp' file)" \
